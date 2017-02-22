@@ -13,6 +13,7 @@ var FileDropDirective = (function () {
     function FileDropDirective(element) {
         this.fileOver = new EventEmitter();
         this.onFileDrop = new EventEmitter();
+        this.onFileDropReading = new EventEmitter();
         this.element = element;
     }
     FileDropDirective.prototype.onDragOver = function (event) {
@@ -38,20 +39,24 @@ var FileDropDirective = (function () {
         }
         this.preventAndStop(event);
         this.emitFileOver(false);
-        this.readFile(transfer.files[0]);
+        this.emitFileDropReading(true);
+        for (var c = 0; c < transfer.files.length; c++) {
+            this.readFile(transfer.files[c]);
+        }
+        this.emitFileDropReading(false);
     };
     FileDropDirective.prototype.readFile = function (file) {
         var _this = this;
         var strategy = this.pickStrategy();
         if (!strategy) {
-            this.emitFileDrop(file);
+            this.emitFileDrop(file, file.name);
         }
         else {
             // XXX Waiting for angular/zone.js#358
             var method = "readAs" + strategy;
             FileAPI[method](file, function (event) {
                 if (event.type === 'load') {
-                    _this.emitFileDrop(event.result);
+                    _this.emitFileDrop(event.result, file.name);
                 }
                 else if (event.type === 'error') {
                     throw new Error("Couldn't read file '" + file.name + "'");
@@ -62,8 +67,11 @@ var FileDropDirective = (function () {
     FileDropDirective.prototype.emitFileOver = function (isOver) {
         this.fileOver.emit(isOver);
     };
-    FileDropDirective.prototype.emitFileDrop = function (file) {
-        this.onFileDrop.emit(file);
+    FileDropDirective.prototype.emitFileDrop = function (file, name) {
+        this.onFileDrop.emit({ data: file, name: name });
+    };
+    FileDropDirective.prototype.emitFileDropReading = function (reading) {
+        this.onFileDropReading.emit(reading);
     };
     FileDropDirective.prototype.pickStrategy = function () {
         if (!this.options) {
@@ -110,6 +118,10 @@ __decorate([
     Output(),
     __metadata("design:type", EventEmitter)
 ], FileDropDirective.prototype, "onFileDrop", void 0);
+__decorate([
+    Output(),
+    __metadata("design:type", EventEmitter)
+], FileDropDirective.prototype, "onFileDropReading", void 0);
 __decorate([
     Input(),
     __metadata("design:type", Object)

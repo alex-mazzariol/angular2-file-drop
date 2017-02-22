@@ -5,7 +5,8 @@ export interface Options {
 }
 export declare class FileDropDirective {
     fileOver: EventEmitter<boolean>;
-    onFileDrop: EventEmitter<File>;
+    onFileDrop: EventEmitter<any>;
+    onFileDropReading: EventEmitter<boolean>;
     options: Options;
     private element;
     constructor(element: ElementRef);
@@ -14,7 +15,8 @@ export declare class FileDropDirective {
     onDrop(event: any): void;
     private readFile(file);
     private emitFileOver(isOver);
-    private emitFileDrop(file);
+    private emitFileDrop(file, name);
+    private emitFileDropReading(reading);
     private pickStrategy();
     private hasStrategy(type);
     private getDataTransfer(event);

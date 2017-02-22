@@ -35,22 +35,24 @@
   },
   "homepage": "https://github.com/jellyjs/angular2-file-drop#readme",
   "dependencies": {
+    "@angular/core": "^2.4.8",
     "fileapi": "^2.0.20"
   },
   "devDependencies": {
     "@angular/common": "^2.4.3",
-    "@angular/compiler": "^2.4.3",
-    "@angular/compiler-cli": "^2.4.3",
+    "@angular/compiler": "^2.4.8",
+    "@angular/compiler-cli": "^2.4.8",
     "@angular/core": "^2.4.3",
     "@angular/platform-browser": "^2.4.3",
     "@angular/platform-browser-dynamic": "^2.4.3",
     "reflect-metadata": "^0.1.8",
+    "rollup": "^0.38.3",
+    "rollup-plugin-babel": "^2.6.1",
     "rxjs": "5.0.3",
     "tslint": "^3.10.2",
-    "typescript": "^2.0.10",
+    "typescript": "^2.2.1",
     "typings": "^1.4.0",
-    "zone.js": "^0.7.2",
-    "rollup": "^0.38.0",
-    "rollup-plugin-babel": "^2.6.1"
+    "uglify-js": "^2.7.5",
+    "zone.js": "^0.7.2"
   }
 }

@@ -1,8 +1,8 @@
 (function (global, factory) {
-	typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('@angular/core'), require('fileapi')) :
-	typeof define === 'function' && define.amd ? define(['exports', '@angular/core', 'fileapi'], factory) :
-	(factory((global.ng = global.ng || {}, global.ng['file-drop'] = global.ng['file-drop'] || {}),global.ng.core));
-}(this, (function (exports,_angular_core) { 'use strict';
+    typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('@angular/core'), require('fileapi')) :
+    typeof define === 'function' && define.amd ? define(['exports', '@angular/core', 'fileapi'], factory) :
+    (factory((global.ng = global.ng || {}, global.ng['file-drop'] = global.ng['file-drop'] || {}),global.ng.core,global.fileapi));
+}(this, (function (exports,_angular_core,fileapi) { 'use strict';
 
 var __decorate$1 = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -17,6 +17,7 @@ var FileDropDirective = (function () {
     function FileDropDirective(element) {
         this.fileOver = new _angular_core.EventEmitter();
         this.onFileDrop = new _angular_core.EventEmitter();
+        this.onFileDropReading = new _angular_core.EventEmitter();
         this.element = element;
     }
     FileDropDirective.prototype.onDragOver = function (event) {
@@ -42,20 +43,24 @@ var FileDropDirective = (function () {
         }
         this.preventAndStop(event);
         this.emitFileOver(false);
-        this.readFile(transfer.files[0]);
+        this.emitFileDropReading(true);
+        for (var c = 0; c < transfer.files.length; c++) {
+            this.readFile(transfer.files[c]);
+        }
+        this.emitFileDropReading(false);
     };
     FileDropDirective.prototype.readFile = function (file) {
         var _this = this;
         var strategy = this.pickStrategy();
         if (!strategy) {
-            this.emitFileDrop(file);
+            this.emitFileDrop(file, file.name);
         }
         else {
             // XXX Waiting for angular/zone.js#358
             var method = "readAs" + strategy;
             FileAPI[method](file, function (event) {
                 if (event.type === 'load') {
-                    _this.emitFileDrop(event.result);
+                    _this.emitFileDrop(event.result, file.name);
                 }
                 else if (event.type === 'error') {
                     throw new Error("Couldn't read file '" + file.name + "'");
@@ -66,8 +71,11 @@ var FileDropDirective = (function () {
     FileDropDirective.prototype.emitFileOver = function (isOver) {
         this.fileOver.emit(isOver);
     };
-    FileDropDirective.prototype.emitFileDrop = function (file) {
-        this.onFileDrop.emit(file);
+    FileDropDirective.prototype.emitFileDrop = function (file, name) {
+        this.onFileDrop.emit({ data: file, name: name });
+    };
+    FileDropDirective.prototype.emitFileDropReading = function (reading) {
+        this.onFileDropReading.emit(reading);
     };
     FileDropDirective.prototype.pickStrategy = function () {
         if (!this.options) {
@@ -114,6 +122,10 @@ __decorate$1([
     _angular_core.Output(),
     __metadata("design:type", _angular_core.EventEmitter)
 ], FileDropDirective.prototype, "onFileDrop", void 0);
+__decorate$1([
+    _angular_core.Output(),
+    __metadata("design:type", _angular_core.EventEmitter)
+], FileDropDirective.prototype, "onFileDropReading", void 0);
 __decorate$1([
     _angular_core.Input(),
     __metadata("design:type", Object)

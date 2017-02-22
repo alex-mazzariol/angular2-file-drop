@@ -68,7 +68,7 @@ export class FileDropDirective {
     this.preventAndStop(event);
     this.emitFileOver(false);
     this.emitFileDropReading(true);
-    for(let c = 0; c < transfer.files.length; c++) {
+    for (let c = 0; c < transfer.files.length; c++) {
         this.readFile(transfer.files[c]);
     }
     this.emitFileDropReading(false);
@@ -98,7 +98,7 @@ export class FileDropDirective {
   }
 
   private emitFileDrop(file: any, name: string): void {
-    this.onFileDrop.emit({data:file, name});
+    this.onFileDrop.emit({data: file, name});
   }
 
   private emitFileDropReading(reading: boolean): void {
