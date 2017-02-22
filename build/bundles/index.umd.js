@@ -1,8 +1,8 @@
 (function (global, factory) {
-    typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('@angular/core'), require('fileapi')) :
-    typeof define === 'function' && define.amd ? define(['exports', '@angular/core', 'fileapi'], factory) :
-    (factory((global.ng = global.ng || {}, global.ng['file-drop'] = global.ng['file-drop'] || {}),global.ng.core,global.fileapi));
-}(this, (function (exports,_angular_core,fileapi) { 'use strict';
+	typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('@angular/core'), require('fileapi')) :
+	typeof define === 'function' && define.amd ? define(['exports', '@angular/core', 'fileapi'], factory) :
+	(factory((global.ng = global.ng || {}, global.ng['file-drop'] = global.ng['file-drop'] || {}),global.ng.core));
+}(this, (function (exports,_angular_core) { 'use strict';
 
 var __decorate$1 = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
