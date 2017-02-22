@@ -16,7 +16,8 @@ export interface Options {
 @Directive({ selector: '[fileDrop]' })
 export class FileDropDirective {
   @Output() public fileOver: EventEmitter<boolean> = new EventEmitter<boolean>();
-  @Output() public onFileDrop: EventEmitter<File> = new EventEmitter<File>();
+  @Output() public onFileDrop: EventEmitter<any> = new EventEmitter<any>();
+  @Output() public onFileDropReading: EventEmitter<boolean> = new EventEmitter<boolean>();
   @Input() public options: Options;
 
   private element: ElementRef;
@@ -66,21 +67,25 @@ export class FileDropDirective {
 
     this.preventAndStop(event);
     this.emitFileOver(false);
-    this.readFile(transfer.files[0]);
+    this.emitFileDropReading(true);
+    for(let c = 0; c < transfer.files.length; c++) {
+        this.readFile(transfer.files[c]);
+    }
+    this.emitFileDropReading(false);
   }
 
   private readFile(file: File): void {
     const strategy = this.pickStrategy();
 
     if (!strategy) {
-      this.emitFileDrop(file);
+      this.emitFileDrop(file, file.name);
     } else {
       // XXX Waiting for angular/zone.js#358
       const method = `readAs${strategy}`;
 
       FileAPI[method](file, (event) => {
         if (event.type === 'load') {
-          this.emitFileDrop(event.result);
+          this.emitFileDrop(event.result, file.name);
         } else if (event.type === 'error') {
           throw new Error(`Couldn't read file '${file.name}'`);
         }
@@ -92,8 +97,12 @@ export class FileDropDirective {
     this.fileOver.emit(isOver);
   }
 
-  private emitFileDrop(file: any): void {
-    this.onFileDrop.emit(file);
+  private emitFileDrop(file: any, name: string): void {
+    this.onFileDrop.emit({data:file, name});
+  }
+
+  private emitFileDropReading(reading: boolean): void {
+    this.onFileDropReading.emit(reading);
   }
 
   private pickStrategy(): string | void {
