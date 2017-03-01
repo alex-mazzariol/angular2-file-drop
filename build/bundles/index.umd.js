@@ -79,7 +79,7 @@ var FileDropDirective = (function () {
     };
     FileDropDirective.prototype.pickStrategy = function () {
         if (!this.options) {
-            return;
+            return 'DataURL';
         }
         if (this.hasStrategy(this.options.readAs)) {
             return this.options.readAs;

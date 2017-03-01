@@ -107,7 +107,7 @@ export class FileDropDirective {
 
   private pickStrategy(): string | void {
     if (!this.options) {
-      return;
+      return 'DataURL';
     }
 
     if (this.hasStrategy(this.options.readAs)) {
